@@ -112,7 +112,7 @@ ProcessingRequests.prototype.UpdateAccount = function(parseData) {
 
 ProcessingRequests.prototype.UnSubRate = function(parseData) {
     clearInterval(idTimerGenerateOneRate);
-    return true;
+    return JSON.stringify(['UnSubRate', {result: 0}]);
 }
 
 ProcessingRequests.prototype.SubRate = function(parseData, connection) {
@@ -126,6 +126,10 @@ ProcessingRequests.prototype.SubRate = function(parseData, connection) {
         arr[1] = new objRate(getRandomRate(dataSer.rates.buy.min, dataSer.rates.buy.max), getRandomRate(dataSer.rates.sell.min, dataSer.rates.sell.max), parseData.s, null, parseData.sym, parseData.client);
         connection.sendUTF(JSON.stringify(arr));
     }, 1000);
+    setTimeout(function() {
+        clearInterval(idTimerGenerateOneRate);
+    }, 60000);
+    
     return true;
 }
 
@@ -264,6 +268,7 @@ function findActiveData(sym) {
 }
 
 function getRandomRate(min, max) {
-    var rate = (min + Math.random()) * (max - min);
+    // var rate = (min + Math.random()) * (max - min);
+    var rate = Math.random() * (max - min + 1) + min;
     return rate.toFixed(3);
 }
